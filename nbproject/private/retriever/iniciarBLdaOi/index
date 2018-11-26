@@ -1,0 +1,1153 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>Banda Larga da Oi WiFi</title>
+    <link rel="icon" href="img/favicon.ico" type="/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen"/>
+
+    <script src="js/vendor/jquery.min.js"></script>
+    <script src="js/vendor/jquery.validate.min.js"></script>
+    <script src="js/vendor/additional-methods.min.js"></script>
+    <script src="js/vendor/console-polyfill.js"></script>
+    <script src="js/vendor/async.js"></script>
+    <script src="js/vendor/sugar.min.js"></script>
+    <script src="js/vendor/jquery.validateBR.js"></script>	
+	
+
+    <!-- VideoJS -->
+   <link href="lib/videojs/video-js.css" rel="stylesheet">
+    <script src="lib/videojs/video.js"></script>
+    <script>
+        videojs.options.flash.swf = "lib/videojs/video-js.swf"
+    </script>
+
+    <script type="text/javascript">
+		var refreshCount = 0;
+        var isProcess = 0;
+		var initDone = 0;
+		var initWifiDone = 0;
+//		var testcnt = 0; //debug
+		 
+        function stopUpdate()
+        {
+            window.clearInterval(bgInterval);
+        }
+
+        function updateValue(msg)
+        {
+            var upDate = msg.replace(/\r\n/ig, "");
+            upDate = upDate.replace(/\n/ig, "");
+            upDate = upDate.split('/');
+			$("#powerState").val(upDate[0]);
+			$("#ethernetState").val(upDate[1]);
+			$("#dslState").val(upDate[2]);
+			$("#internetState").val(upDate[3]);
+			$("#wlanState").val(upDate[4]);
+
+	
+			if (initDone == 0)
+				$(document).mcStatusVerify({
+					_target: ".box_status",
+					_data:   $("#status-test").serializeArray(),
+					_msg:    $("#mensagem")
+				});		
+			
+			refreshCount++;
+        }
+		
+
+      function updateDevStatus()
+        {
+/*
+			//used for debug
+			if (testcnt < 2)
+				updateValue("ok/ok/erro/loader/loader");
+			else if (testcnt < 4)
+				updateValue("ok/ok/waiting/loader/loader");
+			else
+				updateValue("ok/ok/ok/ok/ok");
+			testcnt++;				
+			
+			return;
+*/
+			var objXMLHTTP = null;
+            var url = '/wizardoi/oi_index.cgi';
+            var params = 'viewPage=indexPage&isSubmit=1&pageAct=refresh&refreshCount='+refreshCount;
+
+            if (window.XMLHttpRequest) {
+                objXMLHTTP = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                // code for IE
+                objXMLHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+        
+            if ( objXMLHTTP != null )
+            {
+                objXMLHTTP.open("POST", url, true);
+                objXMLHTTP.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                objXMLHTTP.onreadystatechange = function() {
+                    if(objXMLHTTP.readyState == 4) {
+                        var updateValueStr = objXMLHTTP.responseText;
+            
+                        if ( (updateValueStr != null) && updateValueStr != "" ) {
+                            updateValue(updateValueStr);
+                        }
+                    }
+                }
+                objXMLHTTP.send(params);
+            }
+        }
+
+        function wifiSubmit()
+        {
+            with(document.forms[0])
+            {
+                stopUpdate();
+
+                var objXMLHTTP = null;
+                var url = '/wizardoi/oi_index.cgi';
+                var params = 'viewPage=indexPage&isSubmit=1&pageAct=wifiSet';
+
+                if(isProcess == 0)
+                {
+                    isProcess = 1;
+                    params += '&network_name=' + encodeURIComponent($('#nameRede').val());
+                    params += '&security_level=' + $("input[name='security_level']:checked").val();
+                    params += '&password=' + encodeURIComponent($('#passwordRede').val());
+    
+                    if (window.XMLHttpRequest) {
+                        objXMLHTTP = new XMLHttpRequest();
+                    } else if (window.ActiveXObject) {
+                        // code for IE
+                        objXMLHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                
+                    if ( objXMLHTTP != null )
+                    {
+                        objXMLHTTP.open("POST", url, true);
+                        objXMLHTTP.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        objXMLHTTP.onreadystatechange = function() {
+                            if(objXMLHTTP.readyState == 4) {
+                                var updateValueStr = objXMLHTTP.responseText;
+                                if ( (updateValueStr != null) && updateValueStr != "" ) {
+                                    isProcess = 0;                                
+                                }
+                            }
+                        }
+                        objXMLHTTP.send(params);
+                    }
+                }
+            }
+        }
+
+        function goPPPSet()
+        {
+            with(document.forms[1])
+            {
+                if (isValidAccount(username.value) == false)
+                {
+                	return false;
+                }
+
+                if ((isValidPPPoEpwd(username.value, 1, 63) == false) || (isValidPPPoEpwd(password.value, 1, 29) == false))
+                {
+                    return false;
+                }
+
+                stopUpdate();
+                return true;
+            }
+        }
+		
+        var key;
+        // Lightbox closing hook
+        $(function () {
+            $('body').delegate('.action-close', 'click', function () {
+                $(this).closest('#success').hide()
+                $('.overlay').fadeOut( "slow" );
+            })
+        })
+
+        // Overlay fixing hook
+        $(function () {
+            $('#success')
+                    .append('<div class="ov-after"></div>')
+                    .prepend('<div class="ov-before"></div>')
+                    .prepend('<div class="ov-frame"></div>')
+        })
+
+        // Lightbox framing
+        $(function () {
+            $('.lightbox')
+                    .each(function () {
+                        $(this)
+                                .children()
+                                .wrapAll("<div class='lightbox-contents'></div>")
+                    })
+            $('.lightbox')
+                    .prepend('<div class="lightbox-frame"></div>')
+        })
+
+        // Password whitespace block
+        $(function(){
+            $('.sucesso_password_field input').on('keydown', function(ev){
+                if (ev.which == 32){
+                    return false
+                }
+            })
+        })
+
+        $(function(){
+            // starter scripts
+            $(document).ready(function(){
+                updateDevStatus(); //init
+				
+                bgInterval = window.setInterval(function(){
+					if (initDone == 1){
+						initDone = 0;
+						updateDevStatus();
+					}
+                }, 5000);
+
+                // Configurando clicks
+                $('.modem-video').click(function () {
+                    $(".ov-modem-video").fadeIn("normal");
+                });
+
+                $("a#cliente-empresarial").click(function(){
+                    $(".ov-velox-empresarial").fadeIn("normal");
+                    return false;
+                });
+
+                $("#teste-estado a").click(function(){
+                    if ($(this).parent().is(".closed")) {
+                        $(this).parent().removeClass("closed");
+                    } else {
+                        $(this).parent().addClass("closed");
+                    }
+                });
+            });
+		})
+        
+        /**
+         * Function that performs the verification of the status of each .box_status
+         * 
+         * @return none
+         * @author fabio de assis <fabio.assis@mobicare.com.br>
+         * 
+         */
+        $.fn.mcStatusVerify = function(options){
+            
+            $.fn.mcStatusVerify.defaults = {
+                _target: "class",
+                _data:   "array(array('name','value')",
+                _msg:    "elemento da msg"
+            };
+            var e = $.extend({}, $.fn.mcStatusVerify.defaults, options);
+
+            // Checking whether to show the error message
+            var _showmsg = "";
+            for (var i = e._data.length - 1; i >= 0; i--) {
+			_showmsg = (e._data[i].value == "waiting" || e._data[i].value == "erro" || e._data[i].value == "erro_r2") ? e._data[i].value : _showmsg;
+            };
+			
+            // Reversing the order of the Array
+            e._data = e._data.reverse(); // Only necessary to serialize the form. Remove if you do not need
+            var i = e._data.length - 1;
+            _msg = null;
+			// Creates a looping animation
+            steps_interval = window.setInterval(function(){
+                if (i >= 0) {
+                    var _id = "#" + e._data[i]["name"];
+					
+                    // Checks if rel is empty
+                    var _rel = ($(_id).attr("rel") == null) ? "loading" : $(_id).attr("rel");
+                    $(_id).attr("rel", _rel);
+
+                    // Checks for step change in status
+                    if (!$(_id).is(".status_" + e._data[i]["value"])) {
+                        
+                        $(_id)
+                            .removeClass("status_" + $(_id).attr("rel"))
+                            .addClass("status_" + e._data[i]["value"])
+                            .attr("rel", e._data[i]["value"])
+
+                        if(e._data[i]["value"] == "ok" || (e._data[i]["name"] == "ethernet" && e._data[i]["value"] == "ignored")) {
+
+                            $(_id).next(".box_status").removeClass("status_loading").addClass("status_loader").attr("rel","loader");
+
+                        }
+
+                        if (e._data[i]["value"] == "ignored") {
+                            $(".using-wifi").show();
+                        }
+        
+                    }
+                    
+                    if (e._data[i]["value"] == "waiting" || e._data[i]["value"] == "erro" || e._data[i]["value"] == "erro_r2") {
+
+                        if (_showmsg == e._data[i]["value"]) {
+
+                            if (_showmsg != $("#wrap").attr("rel") || e._data[i]["name"] != $("#wrap").attr("step")){
+                                $("#wrap").attr("rel", _showmsg).attr("step", e._data[i]["name"]).removeAttr("class").addClass("bd-" + e._data[i]["value"] + " bd-" + e._data[i]["name"] + "-" + e._data[i]["value"]);
+                            }
+                        }
+
+                    } else {
+                        if (_showmsg == "" && e._data[i]["name"] == $("#wrap").attr("step")) {
+                            $("#wrap").removeAttr("class").removeAttr("rel").removeAttr("step");
+                        }
+                    }
+
+                    // Checks completion of the process
+
+                    if(e._data[i]["name"] == "wlan" && e._data[i]["value"] == "ok") {
+                        
+                        $("#content").delay(2000).fadeOut("normal");
+                        $("#success").delay(3000).fadeIn("normal");
+						if (initWifiDone == 0){
+							var xml = "<rss version='2.0'><ID>Aokis</ID><KEY>tat34349295</KEY></rss>",
+								xmlDoc = $.parseXML( xml ),
+								$xml = $( xmlDoc ),
+								$id = $xml.find( "ID" ),
+								$key = $xml.find( "KEY" );
+							var securityMode = "wpa2-psk";
+							key = $key.text();
+
+                            $( "input[name=network_name]" ).val( $id.text() );
+                            $( "input[name=password]" ).val( $key.text() );
+                            $( "input[name=password_conf]" ).val( $key.text() );
+
+							$('.oiwifi-form [name=security_level][value="'+securityMode+'"]').prop('checked', true)
+							$(".sucesso_password_field").toggle((securityMode == 'none'?false:true))
+
+							$("[name=password], [name=password_conf]").rules( "remove", "minlength maxlength" );
+
+							if (securityMode == "wpa2-psk")
+							{
+								$(".sucesso_password .hint").html('De 8 a 63 caracteres');
+								$("[name=password], [name=password_conf]").rules( "add", {
+									minlength: 8,
+									maxlength: 63							
+								});									
+							}
+							else if (securityMode == "wep")
+							{
+								$(".sucesso_password .hint").html('De 5 a 13 caracteres');
+								$("[name=password], [name=password_conf]").rules( "add", {
+									regex: /^([a-zA-Z0-9]{5}([a-zA-Z0-9_]{8})?)?$/
+								});										
+							}
+							initWifiDone = 1;
+						}
+                    }
+
+                    i--;
+
+                } else {
+
+					initDone = 1;
+                    window.clearInterval(steps_interval);
+                }
+                
+            }, 2000);
+
+        };
+		var validator;
+		
+        $(function () {
+            // Inserir Validação de regex.
+			/*
+            $.validator.addMethod("regex", function(value, element, regexpr) {
+                return regexpr.test(value);
+            });
+			*/
+            // Validação  do form da tela de sucesso.
+            validator = $(".oiwifi-form").validate({
+                rules: {
+                    'network_name': {
+                        required: true,
+                        minlength: 5,
+                        maxlength: 160
+                        //regex: /^[a-zA-Z0-9]+$/
+                    },
+                    'password': {
+                        required: true
+                    },
+                    'password_conf':{
+                        required: true,
+                        equalTo : "#passwordRede"
+                    }
+                },
+
+                messages:{
+                    'network_name':{
+                        required: "Por favor preencha o campo.",
+                        //regex: "Digite somente letras e números",
+                        minlength: "Usuário deverá conter mínimo de 5 dígitos"
+                    },
+                    'password':{
+                        required: "Por favor preencha o campo.",
+                        equalTo: "Verifique se as senhas estão iguais. ",
+						regex: jQuery.validator.format("Por favor, forne&ccedil;a um valor entre 5 e 13 caracteres de comprimento.")
+                    },
+                    'password_conf':{
+                        required: "Por favor preencha o campo.",
+                        equalTo: "Verifique se as senhas estão iguais. "
+                    }
+                },
+
+                submitHandler: function() {
+                    $('.ov-wifi-sucesso').fadeIn("normal");
+
+                    var InputNameRede = $('#nameRede').val();
+                    var InputPasswordRede = $('#passwordRede').val();
+                        $('.info-user-2').html('<p> '+ InputNameRede +' </p>' + '<p> '+ InputPasswordRede +' </p>');
+
+
+                        // mostrar msg qnd usuario não alterou a senha
+                        if ( $( "input[name=password]" ).val() == key){
+
+                            $('.alert-password').show();
+                        }
+
+                        else {
+                            $('.alert-password').hide();
+                        }
+                }
+
+            });
+
+        });
+
+        // Events setup
+        $(function () {
+            $("[name=security_level]").click(function(event) {
+				$("[name=password], [name=password_conf]").rules( "remove", "minlength maxlength regex" );
+				validator.resetForm();
+                switch ($("[name=security_level]").filter(':checked').val()) {
+                    case "none":
+                         $(".sucesso_password_field").hide(600);
+                         $("[name=password], [name=password_conf]").val('');
+                         $(".lightbox-wifi").hide();
+                        break;
+                    case "wep":
+                        $(".sucesso_password_field, .info-user-1").show(600);
+                        $("[name=password], [name=password_conf]").val('');
+						$(".sucesso_password .hint").html('De 5 a 13 caracteres');
+						$("[name=password], [name=password_conf]").rules( "add", {
+							regex: /^([a-zA-Z0-9]{5}([a-zA-Z0-9_]{8})?)?$/				
+						});								
+                        break;
+                    case "wpa2-psk":
+                        $(".sucesso_password_field, .info-user-1").show(600);
+                        $("[name=password], [name=password_conf]").val(key);
+						$(".sucesso_password .hint").html('De 8 a 63 caracteres');
+						$("[name=password], [name=password_conf]").rules( "add", {
+							minlength: 8,
+							maxlength: 63							
+						});
+                        break;
+                }
+
+            });
+        });
+
+        $('.action-reset-defaults').click(function () {
+            console.log('Resetando configurações padrão')
+            resetToDefaults(".oiwifi-form");
+        });
+
+    </script>
+
+    <style type="text/css">
+        #teste-estado {
+            background: #fff;
+            border: 1px solid #000;
+            font-size: 10px;
+            overflow: hidden;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            white-space: nowrap;
+            width: 450px;
+            z-index: 99999;
+
+            -webkit-transition: all 0.5s ease-in-out;
+            -moz-transition: all 0.5s ease-in-out;
+            -ms-transition: all 0.5s ease-in-out;
+            -o-transition: all 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+        }
+        #teste-estado.closed {
+            height: 17px;
+            width: 70px;
+        }
+        #teste-estado a {
+            position: absolute;
+            right: 10px;
+            top: 1px;
+        }
+        #teste-estado form {
+            padding: 0 20px 10px;
+        }
+        #teste-estado input {
+            vertical-align: middle;
+        }
+        #teste-estado label {
+            margin-right: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+<form id='status-test'>
+	<!-- power: loader, ok, erro	-->
+	<!-- ethernet: loading, loader, ok, ignored	-->		
+	<!-- dsl: loading, loader, ok, waiting, erro	-->	
+	<!-- internet: loading, loader, ok, waiting, erro_r2	-->	
+	<!-- wlan: loading, loader, ok -->
+	<input type="hidden" id="powerState" name="power" value="ok">
+	<input type="hidden" id="ethernetState" name="ethernet" value="ok">
+    <input type="hidden" id="dslState" name="dsl" value="ok">
+	<input type="hidden" id="internetState" name="internet" value="ok">
+	<input type="hidden" id="wlanState" name="wlan" value="loading">
+
+</form>
+    <div class="icon-loading"></div>
+
+    <div class="overlay overlay-all overlay-fixed ov-velox-empresarial none">
+        <div class="ov-center lightbox lightbox-velox-empresarial">
+          <div class="lightbox-empresarial">
+            <a class="action-close">X</a>
+
+            <h1>Você é um cliente Banda Larga da Oi Empresarial?</h1>
+
+            <p>
+                Digite abaixo seu usuário e senha para liberar seu acesso à internet.
+            </p>
+
+            <span class="formBusinessInvalid erro" style="display:none;">Erro de autenticação do usuário.</span>
+            <form action=oi_index.cgi class="form-box" method=POST name="pppSet" id="formBusiness">
+                <input type="hidden" name="isSubmit" value="1">
+                <input type="hidden" name="pageAct" value="pppSet">
+				<input type="hidden" name="viewPage" value="indexPage">
+                <div class="row">
+                    <label>
+                        <span>Usuário</span>
+                        <input type="text" name="userBusiness" id="loginBusiness"/>
+                    </label>
+                </div>
+                <div class="row">
+                    <label>
+                        <span>Senha</span>
+                        <input type="password" name="passBusiness" id="passwordBusiness"/>
+                    </label>
+                </div>
+                <div class="tleft">
+		                <!--<input type="submit" value="Autenticar" class="btn-green" onClick="return goPPPSet()"/> -->
+                    <input type="submit" value="Autenticar" class="btn-green"/>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+
+    <div class="overlay overlay-all overlay-fixed ov-wifi-sucesso none">
+        <div class="ov-center lightbox lightbox-velox-wifi-sucesso" >
+            <!-- <a class="action-close">X</a> -->
+
+            <div class="lightbox-top-success">
+                <h1>Configuração concluída</h1>
+            </div>
+            <div class="success-message-alt">
+                <h1>Parabéns!</h1>
+
+                <p>
+                    Sua rede WiFi privada foi configurada<br/> com sucesso.
+                </p>
+            </div>
+            <div class="alert-password">
+                <div class="alert">
+                    <p>Você não alterou a senha padrão do WiFi. </p>
+                    <p>Por questões de segurança se recomenda a sua substituição.</p>
+                    <a class="close-redefine"><small>Redefinir Senha</small></a>
+                </div>
+            </div>
+            <div class="alert-network">
+                <p class="alert using-wifi none" style="display:none;">
+                    <strong>ATENÇÃO:&nbsp;</strong>Você configurou o seu modem pela rede WiFi, você perderá a conexão à internet e terá que se conectar novamente com o nome de rede e senha em baixo.
+                </p>
+            </div>
+            <div class='lightbox-wifi'>
+                <p><strong>Não esqueça de anotar o nome da sua rede e senha.</strong></p>
+                <div class= "info-user-1">
+                    <p>Nome de rede WiFi:</p>
+                    <p>Senha:</p>
+                </div>
+                <div class= "info-user-2">
+                    
+                </div>
+            </div>
+            <a id="navegar" class="btn-green btn-full">Navegar na Internet</a>
+        </div>
+    </div>
+
+    <div class="overlay overlay-all none ov-modem-video overlay-fixed">
+        <div class="ov-center lightbox lightbox-modem-video">
+            <a class="action-close">X</a>
+            <object width="446" height="365" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0">
+                <param name="movie" value="video/OiVeloxADSLHelp.swf">
+                <param name="play" value="1">
+                <param name="loop" value="0">
+                <param name="quality" value="high">
+                <embed width="446" height="365" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" type="application/x-shockwave-flash" src="video/OiVeloxADSLHelp.swf"></embed>
+            </object>
+
+        </div>
+    </div>
+
+
+    <!--content-->
+    <div id="wrap">
+        <!--header-->
+        <div id="header" class="global">
+            <a href="javascript:;" class="logo" title="Banda Larga da Oi">Banda Larga da Oi</a>
+            <img src="img/texto_intro.png" class="gridspacer1" alt="Bem-vindo à Banda Larga da Oi!"/>
+        </div>
+
+        <!--script type="text/javascript"></script-->
+        <!--header-->
+
+
+        <div id="content" class="content">
+            <div>
+                <div class="global">
+                    <h1>Aguarde enquanto checamos o funcionamento do seu modem.</h1>
+                </div>
+
+                <div id="oiwifi" class="global steps">
+
+                    <!--Power-->
+                    <div id="power" class="status_loader box_status left" rel="loader">
+                        <div class="icon"></div>
+                        <h2>Power</h2>
+                        <div class="mensagem">
+                            <span class="loader">Verificando...</span>
+                            <span class="ok">Energia</span>
+                            <span class="erro">Modem desligado</span>
+                        </div>
+                    </div>
+                    <!--Power-->
+
+                    <!--Ethernet-->
+                    <div id="ethernet" class="status_loading box_status left">
+                        <div class="icon"></div>
+                        <h2>Ethernet</h2>
+                        <div class="mensagem">
+                            <span class="loading">A Verificar</span>
+                            <span class="loader">Verificando...</span>
+                            <span class="ok">Cabo de Rede</span>
+                            <span class="ignored">Conectado via WiFi </span>
+                        </div>
+                    </div>
+                    <!--Ethernet-->
+
+                    <!--Dsl-->
+                    <div id="dsl" class="status_loading box_status left">
+                        <div class="icon"></div>
+                        <h2>DSL</h2>
+                        <div class="mensagem">
+                            <span class="loading">A Verificar</span>
+                            <span class="loader">Verificando...</span>
+                            <span class="ok">Cabo de Telefone</span>
+                            <span class="waiting">Sincronizando...</span>
+                            <span class="erro">Cabo de telefone desconectado</span>
+                        </div>
+
+                        <!--Mensagens-->
+                        <div class="dv-message global2 dsl2">
+                            <div class="seta"></div>
+                            <b class="rnd_top"><b class="rnd_b1"></b><b class="rnd_b2"></b><b class="rnd_b3"></b><b class="rnd_b4"></b></b>
+
+                            <div class="rnd_content">
+                                <div class="mensagem_content">
+                                    <div class="msg-content waiting">
+                                        <b>Atenção!</b>
+                                        <div>Aguarde 1 minuto, o modem está tentando sincronizar com a rede. Caso o problema persista, o sinal da Banda Larga da Oi pode ainda não ter sido liberado para a sua casa. O prazo de liberação é de até 72 horas a partir da contratação da Banda Larga da Oi. Após esse período <a href="#" class="tooltip-tel" title="Ligue para a OI">ligue para a Oi
+                                        <div class="tooltip-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td>Estados</td>
+                                                        <td>Contatos</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>AL, AM, AP, BA, CE, ES, MA, MG, PA, PB, PI, PE, RJ, RN, RR, SE</td>
+                                                        <td><strong>103 31</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC, DF, GO, MS, MT, PR, RO, RS, SC, TO</td>
+                                                        <td><strong>103 14</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </a>, entre em contato com o nosso Suporte Banda Larga da Oi e informe este erro.</div>
+                                        
+                                    </div>
+                                    <div class="msg-content erro">
+                                        <b>Erro!</b>
+                                        <div>O cabo de telefone parece estar conectado incorretamente. Verifique se o cabo cinza que veio no kit Banda Larga da Oi está conectado corretamente na porta do telefone localizada atrás do modem e na tomada telefônica.<br><a class="modem-video">&raquo; assistir vídeo de instalação do modem.</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <b class="rnd_bottom"><b class="rnd_b4"></b><b class="rnd_b3"></b><b class="rnd_b2"></b><b class="rnd_b1"></b></b>
+                        </div>
+                    </div>
+                    <!--Dsl-->
+
+                    <!--Internet-->
+                    <div id="internet" class="status_loading box_status left">
+                        <div class="icon"></div>
+                        <h2>Internet</h2>
+                        <div class="mensagem">
+                            <span class="loading">A Verificar</span>
+                            <span class="loader">Verificando...</span>
+                            <span class="ok">Internet</span>
+                            <span class="erro">Falha de autenticação</span>
+                            <!-- <span class="erro">Sincronizando...</span> -->
+                            <span class="erro_r2">Falha de autenticação</span>
+                        </div>
+                        <!--Mensagens-->
+                        <div class="dv-message global2 dsl2">
+                            <div class="seta"></div>
+                            <b class="rnd_top"><b class="rnd_b1"></b><b class="rnd_b2"></b><b class="rnd_b3"></b><b class="rnd_b4"></b></b>
+
+                            <div class="rnd_content">
+                                <div class="mensagem_content">
+                                    <div class="msg-content erro">
+                                        <b>Erro!</b>
+                                        <div>
+                                        	Falha de autenticação.
+                                        <a href="" class="tooltip-tel" title="Ligue para a OI">Ligue para a Oi
+                                        <div class="tooltip-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td>Estados</td>
+                                                        <td>Contatos</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>AL, AM, AP, BA, CE, ES, MA, MG, PA, PB, PI, PE, RJ, RN, RR, SE</td>
+                                                        <td><strong>103 31</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC, DF, GO, MS, MT, PR, RO, RS, SC, TO</td>
+                                                        <td><strong>103 14</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </a>, entre em contato com o Suporte Banda Larga da Oi através do número e informe este erro.</div>
+                                        
+                                    </div>
+                                    <!--
+                                    <div class="msg-content erro_r2">
+                                        <b>Atenção!</b>
+                                        <div>Aguarde 1 minuto, o modem está tentando sincronizar com a rede. Caso o problema persista, o sinal da Banda Larga da Oi pode ainda não ter sido liberado para a sua casa. O prazo de liberação é de até 72 horas a partir da contratação da Banda Larga da Oi. Após esse período <a href="" class="tooltip-tel" title="Ligue para a OI">ligue para a Oi
+                                        <div class="tooltip-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td>Estados</td>
+                                                        <td>Contatos</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>AL, AM, AP, BA, CE, ES, MA, MG, PA, PB, PI, PE, RJ, RN, RR, SE</td>
+                                                        <td><strong>103 31</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC, DF, GO, MS, MT, PR, RO, RS, SC, TO</td>
+                                                        <td><strong>103 14</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </a>, entre em contato com o nosso Suporte Banda Larga da Oi e informe este erro.
+                                        <a id="cliente-empresarial" class="white-link" href="#">Você é um cliente Banda Larga da Oi Empresarial?</a>
+
+                                        </div>
+
+
+                                    </div>
+                                    -->
+                                    
+                                    <div class="msg-content erro_r2">
+                                        <b>Erro!</b>
+                                        <div>
+                                        Falha de autenticação.
+                                        <a href="" class="tooltip-tel" title="Ligue para a OI">Ligue para a Oi
+                                        <div class="tooltip-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td>Estados</td>
+                                                        <td>Contatos</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>AL, AM, AP, BA, CE, ES, MA, MG, PA, PB, PI, PE, RJ, RN, RR, SE</td>
+                                                        <td><strong>103 31</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC, DF, GO, MS, MT, PR, RO, RS, SC, TO</td>
+                                                        <td><strong>103 14</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </a>, entre em contato com o Suporte Banda Larga da Oi através do número e informe este erro.</div>
+                                        <a id="cliente-empresarial" class="white-link" href="#">Você é um cliente Banda Larga da Oi Empresarial?</a>
+
+            
+                                    </div>
+
+                                </div>
+                            </div>
+                            <b class="rnd_bottom"><b class="rnd_b4"></b><b class="rnd_b3"></b><b class="rnd_b2"></b><b class="rnd_b1"></b></b>
+                        </div>
+                    </div>
+                    <!--Internet-->
+
+                    <div id="wlan" class="status_loading box_status left">
+
+                        <div class="icon"></div>
+                        <h2>WLan</h2>
+                        <div class="mensagem">
+                            <span class="loading">A Verificar</span>
+                            <span class="loader">Verificando...</span>
+                            <span class="ok">Conectado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="clear:both"></div>
+
+                <!--Mensagens-->
+                <div id="mensagem" class="global2 dsl2 none">
+                    <div class="seta"></div>
+                    <b class="rnd_top"><b class="rnd_b1"></b><b class="rnd_b2"></b><b class="rnd_b3"></b><b class="rnd_b4"></b></b>
+
+                    <div class="rnd_content">
+                        <div class="mensagem_content">
+                            <div class="msg-content dsl_waiting">
+                                <b>Atenção!</b>
+                                <div>Aguarde 1 minuto, o modem está tentando sincronizar com a rede. Caso o problema persista, o sinal da Banda Larga da Oi pode ainda não ter sido liberado para a sua casa. O prazo de liberação é de até 72 horas a partir da contratação da Banda Larga da Oi. Após esse período <a href="" id="tooltip-tel" title="Ligue para a OI">ligue para a Oi
+                                <div class="tooltip-table">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <td>Estados</td>
+                                                        <td>Contatos</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>AL, AM, AP, BA, CE, ES, MA, MG, PA, PB, PI, PE, RJ, RN, RR, SE</td>
+                                                        <td><strong>103 31</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC, DF, GO, MS, MT, PR, RO, RS, SC, TO</td>
+                                                        <td><strong>103 14</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </a>, entre em contato com o nosso Suporte Banda Larga da Oi e informe este erro.</div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <b class="rnd_bottom"><b class="rnd_b4"></b><b class="rnd_b3"></b><b class="rnd_b2"></b><b class="rnd_b1"></b></b>
+                </div>
+                <!--Mensagens-->
+
+                <div class="global3 dsl2 tright none cliente-empresarial">
+                    <a href="#" class="white-link">
+                        Você é um cliente Banda Larga da Oi Empresarial?
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--mensagem de sucesso-->
+        <div class="global" id="success">
+            <div class="ov-center success-contents success-top" style="vertical-align: top;">
+                <div class="mensagem_velox">
+                    <div>
+                        <img src="img/tit_sucesso.png" alt="Muito bem!">
+                        <p>Seu modem está funcionando perfeitamente!
+                        <br/>Confirme abaixo a configuração da sua rede WiFi para
+                        navegar na internet!</p>
+                    </div>
+                </div>
+
+                <form action=oi_index.cgi method=POST name="wifiSet" class="oiwifi-form">
+
+                    <div class="oiwifi-box">
+                        <div class="form-box">
+                            <table>
+                                <tr>
+                                    <th><label>Nome da rede WiFi:</label></th>
+                                    <td>
+                                        <div class="row">
+                                            <input type="text" id="nameRede" name="network_name"/>
+                                            <span class="hint">O nome da rede será visível para todos.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label>Nível de segurança:</label></th>
+                                    <td class="inline-label">
+                                        <div class="row">
+                                            <label>
+                                                <input type="radio" name="security_level" value="wpa2-psk"/>
+                                                <span>Alta (WPA2-PSK) <span>Recomendado</span></span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="security_level" value="wep"/>
+                                                <span>Média (WEP)</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio"  name="security_level" value="none"/>
+                                                <span>Nenhuma</span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="sucesso_password_field sucesso_password">
+                                    <th><label>Senha:<span class="hint">De 5 a 13 caracteres</span></label></th>
+                                    <td>
+                                        <div class="row">
+                                            <input type="text" id="passwordRede" name="password"/>                                            
+                                            <span class="hint_password">Senha inicial localizada embaixo do MODEM. Por questões de segurança se recomenda a sua substituição.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="sucesso_password_field">
+                                    <th><label>Confirmar senha:</label></th>
+                                    <td>
+                                        <div class="row">
+                                            <input type="text" id="passwordRedeConf" name="password_conf"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- <tr class="sucesso_password_field show_pass">
+                                    <th></th>
+                                    <td>
+                                        <input id="show_pass" name="show_pass" type="checkbox"> <label for="show_pass">Exibir senha</label>
+                                    </td>
+                                </tr> -->
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn_continuar" type="submit"></button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <!--mensagem de sucesso-->
+
+
+
+    </div>
+    <!--content-->
+
+
+    <!-- Loader reset router -->
+    <div class="screenLoading">
+        <div class="screenLoading-img">
+            <img src="img/ic_loader.gif" alt="Carregando">
+            <h2 class="screenLoading-text">Aplicando as configurações. Aguarde!</h2>
+        </div>
+    </div>
+
+
+    <!--footer-->
+    <div id="footer" class="global gridspacer2 tcenter">
+        © Copyright 2000-2014 Oi.com.br. Todos os direitos reservados.
+    </div>
+    <!--footer-->
+
+    
+    <script>
+        var internetSetting = 0;
+        //Validação  do form Login Empresarial.
+        $(function() {
+            $.validator.addMethod("regex", function(value, element, regexpr) {
+             return regexpr.test(value);
+            });
+             $.validator.setDefaults({
+              debug: true,
+              success: "valid"
+            });
+            $( "#formBusiness" ).validate({
+                focusInvalid: false,
+                onkeyup: false,
+                onfocusout: false,
+                errorElement: 'span',
+                errorClass: 'error',
+                highlight: function(element) {
+                    $(element).closest('input').addClass('error');
+                },
+                unhighlight: function(element) {
+                    $(element).closest('input').removeClass('error');
+                },
+
+                rules: {
+                    'userBusiness': {
+                        required: true,
+                        minlength: 5,
+                        regex: /^[a-zA-Z0-9]+$/
+                    },
+                    'passBusiness': {
+                        required: true,
+                        minlength: 5
+                    }
+                },
+                messages: {
+                    'userBusiness': {
+                        required: "Insira um usuário válido",
+                        regex: "Digite somente letras e números",
+                        minlength: "Usuário deverá conter mínimo de 5 dígitos"
+                    },
+                    'passBusiness': {
+                        required: "Insira uma senha válida",
+                        minlength: "A senha deverá conter mínimo de 5 dígitos"
+                    }
+                },
+                submitHandler: function() {
+                    if(internetSetting)
+                      return false;
+                    internetSetting = 1;
+                    var consult = 'oi_index.cgi';
+                    var params = 'viewPage=indexPage&isSubmit=1&pageAct=pppSet';
+                    params += '&username=' + $('#loginBusiness').val();
+                    params += '&password=' + $('#passwordBusiness').val();
+                    //stopUpdate();
+                    $.ajax({
+                        url: consult,
+                        type: 'POST',
+                        dataType: 'text',
+                        data: params,
+                        success: function(text){
+                            var msg = text.replace(/\r\n/ig, "");
+                            msg = msg.replace(/\n/ig, "");
+                            if(msg == "1") {
+                                $(".ov-velox-empresarial").fadeOut('slow');
+                                $("input[name='internet'][value=ok]").prop('checked', true);
+                            }
+                            else {
+                                $(".formBusinessInvalid").slideDown(300);
+                            }
+                            internetSetting = 0;
+                            /*
+                            bgInterval = window.setInterval(function(){
+					                      if (initDone == 1){
+						                        initDone = 0;
+						                        updateDevStatus();
+					                      }
+                            }, 5000);
+                            */
+                        },
+                        error: function(){
+                            $(".formBusinessInvalid").slideDown(300);
+                            internetSetting = 0;
+                            /*
+                            bgInterval = window.setInterval(function(){
+					                      if (initDone == 1){
+						                        initDone = 0;
+						                        updateDevStatus();
+					                      }
+                            }, 5000);
+                            */
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $('.tooltip-tel').mouseover(function(){
+              $('.tooltip-table').css('display','table');
+            }).mouseout(function(){
+              $('.tooltip-table').hide();
+        });
+
+
+        $('.close-success, .close-redefine').click(function () {
+            $(this).closest('#success').hide()
+            $('.overlay').fadeOut( "slow" );
+        });
+
+        $('.close-redefine').click(function () {
+            $(this).closest('#success').hide()
+            $('.overlay').fadeOut( "slow" );
+        });
+
+        $("#navegar").click(function(){ 
+
+            function callSuccess(){
+                setTimeout(function() {
+                    checkRouterAccess(function(){
+                        window.location="http://www.oi.com.br/boasvindas_oipravoce/";
+                    }, 30000); // Change the timeout according to the router.
+                }, 5000);
+            };
+
+            $('.screenLoading').show();
+			wifiSubmit();
+            callSuccess();
+
+            function checkRouterAccess(successCallback, poolingTime) {
+                $.ajax({
+                    url: "http://www.oi.com.br/boasvindas_oipravoce/",
+                    type: "GET",
+                    dataType: "json",
+                    timeout: 1000,
+                    success: function(response) { 
+                        successCallback();
+                        $('.screenLoading').hide();
+                    },
+                    error: function(x, t, m) {
+                        setTimeout(successCallback, poolingTime);
+                    }
+                });
+            };
+        });
+
+        
+    </script>
+</body>
+</html>
+
