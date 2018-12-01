@@ -50,8 +50,6 @@ public class FXMLkitchenController implements Initializable {
     @FXML
     private ImageView manteiga;
     @FXML
-    private ImageView geleia_morango;
-    @FXML
     private ImageView chantily;
     @FXML
     private ImageView chocolate;
@@ -66,7 +64,6 @@ public class FXMLkitchenController implements Initializable {
     @FXML
     private ImageView ovos;
 
-    @FXML
     private void checkEspatula(ActionEvent event) {
         System.out.println("Fim de jogo!");
         System.exit(0);
@@ -100,26 +97,12 @@ public class FXMLkitchenController implements Initializable {
     private void iniciarButton(ActionEvent event, Stage stage) throws Exception {
 
         Parent root = FXMLLoader.load(getClass().getResource("kitchen.fxml"));
-        
         Scene scene = new Scene(root);
-
         stage.setScene(scene);
-        
-        
-        
         stage.show();
         
         
     }
-    /*
-    public static void updateTimer(String t){
-        if(FXMLkitchenController.timer == null){
-            timer = new Label();
-        }
-        timer.setText(t);
-    }
-    
-    */
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
