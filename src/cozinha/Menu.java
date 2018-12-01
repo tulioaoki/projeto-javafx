@@ -36,6 +36,8 @@ public class Menu extends Application {
             System.out.println("Loop!");
         });
         player.play();
+        stage.centerOnScreen(); 
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
