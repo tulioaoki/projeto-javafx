@@ -19,11 +19,11 @@ import javafx.util.Duration;
  * @author tulioaoki
  */
 public class Menu extends Application {
-    
+
     private static Stage novo_stage;
     public static Media media;
     public static MediaPlayer player;
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         novo_stage = stage;
@@ -36,25 +36,27 @@ public class Menu extends Application {
             System.out.println("Loop!");
         });
         player.play();
-        stage.centerOnScreen(); 
+        stage.centerOnScreen();
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
+
+        
     }
-    
-    public static Stage getStage(){
+
+    public static Stage getStage() {
         return Menu.novo_stage;
     }
-    
-    public static void setStage(Stage s){
+
+    public static void setStage(Stage s) {
         Menu.novo_stage = s;
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

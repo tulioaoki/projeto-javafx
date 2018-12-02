@@ -25,6 +25,7 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("Fim de jogo!");
         System.exit(0);
     }
+    
     @FXML
     private void iniciarButton(ActionEvent event) throws Exception {
         Menu.getStage().close();

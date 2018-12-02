@@ -36,6 +36,7 @@ public class Cozinha extends Item {
         this.complementoBuilder = new ComplementoBuilder();
         this.ingredientBuilder = new IngredientBuilder();
         this.recheioBuilder = new RecheioBuilder();
+        this.bolo = new Bolo();
     }
     
     public void addCobertura(Espatula e){
@@ -59,6 +60,10 @@ public class Cozinha extends Item {
         return true;
         }
         return false;
+    }
+    
+    public boolean isBowlReady(){
+        return this.bowl.isReady();
     }
     
     public boolean misturar(){
@@ -128,7 +133,19 @@ public class Cozinha extends Item {
     public void setBolo(Bolo bolo) {
         this.bolo = bolo;
     }
-
+    
+    public int getQtdIngredientsBowl(){
+        return this.bowl.getQtdIngredients();
+    }
+    
+    public boolean hasMainIngredient(){
+        return this.bolo.hasMainIngredient();
+    }
+    
+    public boolean bowlHasMainIngredient(){
+        return this.bowl.hasMainIngredient();
+    }
+    
     public ArrayList<Ingrediente> getIngredientesBowl() {
         return this.bowl.getIngredientes();
     }
@@ -141,7 +158,7 @@ public class Cozinha extends Item {
         this.bowl.addIngrediente(i);
     }
     
-    public void addOvo(){
+    public void addOvos(){
         this.bowl.addIngrediente((ingredientBuilder.getIngredient("ovos")));
     }
     

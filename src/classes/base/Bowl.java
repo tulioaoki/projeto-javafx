@@ -13,16 +13,13 @@ public class Bowl extends Item {
     
     public Bowl() {
         bbuilder= new BoloBuilder();
+        this.ingredientes = new ArrayList();
     }
 
     public Bolo MixCake() {
         Bolo b = this.bbuilder.buildBoloWithIngredients(this.ingredientes);
         b.setMisturado(true);
         return b;
-    }
-    
-    public void addIngrediente(Ingrediente i){
-        this.ingredientes.add(i);
     }
 
     public String getCor() {
@@ -73,6 +70,49 @@ public class Bowl extends Item {
         return has_leite && has_manteiga && has_acucar
                 && has_ovo && has_farinha && has_fermento && has_main_ingredient;
         
+    }
+    
+    public boolean addIngrediente(Ingrediente i) {
+        boolean has_principal = false;
+        if (i.is_principal()) {
+            for (Ingrediente ingrediente : this.ingredientes) {
+                if(ingrediente.is_principal()){
+                    has_principal = true;
+                    break;
+                }
+            }
+            if(!has_principal){
+                this.ingredientes.add(i);
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            for (Ingrediente ingrediente : this.ingredientes) {
+                if(ingrediente.getNome().equalsIgnoreCase(i.getNome())){
+                    return false;
+                }
+            }
+            this.ingredientes.add(i);
+            return true;
+        }
+    }
+
+
+
+    public int getQtdIngredients() {
+        int x = 0;
+        for(Ingrediente i : this.ingredientes){
+            x++;
+        }
+        return x;
+    }
+    
+    public boolean hasMainIngredient() {
+        if (this.ingredientes.stream().anyMatch((i) -> (i.is_principal()))) {
+            return true;
+        }
+        return false;
     }
     
 }

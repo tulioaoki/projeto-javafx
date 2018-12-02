@@ -17,7 +17,8 @@ public class Bolo extends Item {
     private ArrayList<Ingrediente> ingredientes;
 
     public Bolo() {
-
+        this.ingredientes = new ArrayList();
+        this.misturado = false;
     }
 
     public boolean isMisturado() {
@@ -110,6 +111,7 @@ public class Bolo extends Item {
                     return false;
                 }
             }
+            this.ingredientes.add(i);
             return true;
         }
     }
@@ -122,6 +124,23 @@ public class Bolo extends Item {
     @Override
     public String toString() {
         return "Bolo{" + "sabor=" + sabor + ", cozido=" + cozido + ", queimado=" + queimado + ", cobertura=" + cobertura + ", complemento=" + complemento + ", recheio=" + recheio + ", ingredientes=" + ingredientes + '}';
+    }
+
+    public int getQtdIngredients() {
+        int x = 0;
+        for(Ingrediente i : this.ingredientes){
+            x++;
+        }
+        return x;
+    }
+    
+    public boolean hasMainIngredient() {
+        boolean x = false;
+        for(Ingrediente i : this.ingredientes){
+            if(i.is_principal()) x = true;
+            break;
+        }
+        return x;
     }
     
     

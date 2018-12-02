@@ -5,6 +5,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="683.0" prefWidth="1144.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cozinha.FXMLkitchenController">
    <children>
@@ -15,7 +16,7 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ImageView>
-      <ImageView fx:id="bowl" fitHeight="173.0" fitWidth="246.0" layoutX="14.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="bowl" fitHeight="173.0" fitWidth="246.0" layoutX="14.0" layoutY="434.0" onMouseClicked="#interactBowl" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/bowl_vazio.png" />
          </image>
@@ -26,22 +27,22 @@
          </image>
       </ImageView>
       <Button layoutX="798.0" layoutY="314.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <ImageView fx:id="laranja" fitHeight="47.0" fitWidth="48.0" layoutX="295.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="laranja" fitHeight="82.0" fitWidth="72.0" layoutX="274.0" layoutY="479.0" onMouseClicked="#selectLaranja" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/LARANJA.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="limao" fitHeight="53.0" fitWidth="61.0" layoutX="346.0" layoutY="512.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="limao" fitHeight="53.0" fitWidth="61.0" layoutX="346.0" layoutY="512.0" onMouseClicked="#selectLimao" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/LIMAO.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="morango" fitHeight="53.0" fitWidth="54.0" layoutX="332.0" layoutY="561.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="morango" fitHeight="53.0" fitWidth="54.0" layoutX="332.0" layoutY="561.0" onMouseClicked="#selectMorango" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/MORANGO.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="manteiga" fitHeight="65.0" fitWidth="109.0" layoutX="399.0" layoutY="571.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="manteiga" fitHeight="65.0" fitWidth="109.0" layoutX="399.0" layoutY="571.0" onMouseClicked="#selectManteiga" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/MANTEIGA.png" />
          </image>
@@ -51,57 +52,55 @@
             <Image url="@../resources/CHANTILY.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="chocolate" fitHeight="127.0" fitWidth="114.0" layoutX="450.0" layoutY="411.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="chocolate" fitHeight="127.0" fitWidth="114.0" layoutX="450.0" layoutY="411.0" onMouseClicked="#selectChocolate" onMouseDragged="#selectChocolate" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/CACAU.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="farinha" fitHeight="127.0" fitWidth="171.0" layoutX="514.0" layoutY="486.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="farinha" fitHeight="127.0" fitWidth="171.0" layoutX="514.0" layoutY="486.0" onMouseClicked="#selectFarinha" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/FARINHA.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="ovos" fitHeight="47.0" fitWidth="168.0" layoutX="372.0" layoutY="327.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="ovos" fitHeight="47.0" fitWidth="168.0" layoutX="372.0" layoutY="327.0" onMouseClicked="#selectOvos" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/bandeija_ovo.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="fermento" fitHeight="104.0" fitWidth="76.0" layoutX="327.0" layoutY="398.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="fermento" fitHeight="104.0" fitWidth="76.0" layoutX="260.0" layoutY="561.0" onMouseClicked="#selectFermento" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/fermento.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="acucar" fitHeight="82.0" fitWidth="88.0" layoutX="183.0" layoutY="286.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="acucar" fitHeight="82.0" fitWidth="88.0" layoutX="183.0" layoutY="286.0" onMouseClicked="#selectAcucar" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/acucar.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="forma_massa" fitHeight="154.0" fitWidth="227.0" layoutX="700.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="forma_massa" fitHeight="154.0" fitWidth="227.0" layoutX="727.0" layoutY="455.0" onMouseClicked="#selectForma" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../resources/forma_com_massa.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="944.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="945.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/Countdown%20timer%202%20minutes_2.gif" />
          </image>
       </ImageView>
-      <Button mnemonicParsing="false" text="Button" />
-      <Button mnemonicParsing="false" text="Button" />
-      <Button layoutX="108.0" layoutY="499.0" mnemonicParsing="false" text="Button" />
-      <Button mnemonicParsing="false" text="Button" />
-      <Button mnemonicParsing="false" text="Button" />
-      <Button layoutX="108.0" layoutY="489.0" mnemonicParsing="false" text="Button" />
-      <Button layoutX="808.0" layoutY="324.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="808.0" layoutY="324.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="818.0" layoutY="334.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="818.0" layoutY="334.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="828.0" layoutY="344.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="828.0" layoutY="344.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="838.0" layoutY="354.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Button layoutX="838.0" layoutY="354.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
-      <Pane prefHeight="200.0" prefWidth="200.0" />
-      <Pane prefHeight="200.0" prefWidth="200.0" />
-      <Pane prefHeight="200.0" prefWidth="200.0" />
+      <ImageView fx:id="leite" fitHeight="168.0" fitWidth="91.0" layoutX="98.0" layoutY="212.0" onMouseClicked="#selectLeite" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/leite_vaquinha.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="enformar_b" layoutX="37.0" layoutY="540.0" mnemonicParsing="false" onAction="#EnformarBolo" prefHeight="63.0" prefWidth="200.0" text="Enformar" visible="false">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Button>
+      <Button fx:id="misturar_b" layoutX="47.0" layoutY="550.0" mnemonicParsing="false" onAction="#MisturarMassa" prefHeight="63.0" prefWidth="200.0" text="Misturar" visible="false">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Button>
    </children>
 </Pane>
