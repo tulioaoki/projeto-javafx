@@ -5,6 +5,7 @@
  */
 package cozinha;
 
+import static cozinha.Menu.isMuted;
 import static cozinha.Menu.media;
 import static cozinha.Menu.player;
 import javafx.application.Application;
@@ -33,11 +34,17 @@ public class Win extends Application{
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
         });
-        player.play();
+        if(!isMuted.get()){
+            player.play();
+        }
         winStage.centerOnScreen(); 
         winStage.setResizable(false);
         winStage.setScene(scene);
         winStage.show();
+    }
+    
+    public static Stage getStage(){
+        return winStage;
     }
     
 }

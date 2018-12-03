@@ -16,28 +16,7 @@ public class Kitchen extends Application {
     public static Stage kitchen_stage;
 
     
-    private final Runnable startTask = new Runnable(){
-         @Override
-         public void run() {
-             System.out.println("Rodando");
-            try{
-                long mTime = System.currentTimeMillis();
-                long end = mTime + 5000; // 5 seconds 
-                while (mTime < end) {
-                    mTime = System.currentTimeMillis();
-                }      
-                System.out.println("close stage");
-                
-            } catch (Exception e){}
-        }     
-    };
-    
-    private void startTimer() throws InterruptedException, Exception{
-        Thread thread = new Thread(startTask);
-        thread.start();
-        
-    }
-    
+
     
     @Override
     public void start(Stage stage) throws Exception {

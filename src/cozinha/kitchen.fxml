@@ -17,7 +17,7 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ImageView>
-      <ImageView fx:id="bowl" fitHeight="173.0" fitWidth="246.0" layoutX="14.0" layoutY="434.0" onMouseClicked="#interactBowl" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="bowl" fitHeight="173.0" fitWidth="246.0" layoutX="8.0" layoutY="434.0" onMouseClicked="#interactBowl" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/bowl_vazio.png" />
          </image>
@@ -72,14 +72,14 @@
             <Image url="@../resources/acucar.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="forma_massa" disable="true" fitHeight="154.0" fitWidth="227.0" layoutX="727.0" layoutY="455.0" onMouseClicked="#selectForma" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="forma_massa" disable="true" fitHeight="75.0" fitWidth="182.0" layoutX="727.0" layoutY="486.0" onMouseClicked="#selectForma" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../resources/forma_com_massa.png" />
+            <Image url="@../resources/forma_massa_meio.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="945.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="999.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../resources/Countdown%20timer%202%20minutes_2.gif" />
+            <Image url="@../resources/clock.gif" />
          </image>
       </ImageView>
       <ImageView fx:id="leite" fitHeight="168.0" fitWidth="91.0" layoutX="98.0" layoutY="212.0" onMouseClicked="#selectLeite" pickOnBounds="true" preserveRatio="true">
@@ -87,12 +87,12 @@
             <Image url="@../resources/leite_vaquinha.png" />
          </image>
       </ImageView>
-      <Button fx:id="enformar_b" layoutX="37.0" layoutY="540.0" mnemonicParsing="false" onAction="#EnformarBolo" prefHeight="63.0" prefWidth="200.0" text="Enformar" visible="false">
+      <Button fx:id="enformar_b" layoutX="20.0" layoutY="438.0" mnemonicParsing="false" onAction="#EnformarBolo" opacity="0.0" prefHeight="142.0" prefWidth="223.0" text="Enformar" visible="false">
          <font>
             <Font size="31.0" />
          </font>
       </Button>
-      <Button fx:id="misturar_b" layoutX="47.0" layoutY="550.0" mnemonicParsing="false" onAction="#MisturarMassa" prefHeight="63.0" prefWidth="200.0" text="Misturar" visible="false">
+      <Button fx:id="misturar_b" layoutX="20.0" layoutY="431.0" mnemonicParsing="false" onAction="#MisturarMassa" opacity="0.0" prefHeight="142.0" prefWidth="223.0" text="Misturar" visible="false">
          <font>
             <Font size="31.0" />
          </font>

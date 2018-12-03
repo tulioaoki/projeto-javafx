@@ -5,6 +5,7 @@
  */
 package cozinha;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,22 +20,27 @@ import javafx.util.Duration;
  * @author tulioaoki
  */
 public class Menu extends Application {
-
+    public static AtomicBoolean isMuted;
     private static Stage novo_stage;
     public static Media media;
     public static MediaPlayer player;
 
     @Override
     public void start(Stage stage) throws Exception {
+        isMuted = new AtomicBoolean();
+        isMuted.set(false);
         novo_stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         Scene scene = new Scene(root);
+        
         media = new Media(this.getClass().getResource("/resources/mc.mp3").toExternalForm());
         player = new MediaPlayer(media);
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
         });
-        player.play();
+        if(!isMuted.get()){
+            player.play();
+        }
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setScene(scene);

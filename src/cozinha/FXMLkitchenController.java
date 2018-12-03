@@ -6,12 +6,19 @@
 package cozinha;
 
 import builders.CozinhaBuilder;
+import builders.GeradorReceita;
 import classes.base.Bolo;
 import classes.base.Cozinha;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,17 +27,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
  * @author tulioaoki
  */
 public class FXMLkitchenController implements Initializable {
+    static int interval = 59;
     private boolean alreadyBaked;
     private ImageView img;
     private Cozinha cozinha;
     private String selectedItem;
     private String selectedIngrediente;
+    private Timer timer;
+    
     @FXML
     private ImageView fundo;
     @FXML
@@ -132,19 +143,16 @@ public class FXMLkitchenController implements Initializable {
             String x = this.getClass().getResource("/resources/fonroligado.png").toExternalForm();
             Image forno_ligado = new Image(x);
             this.forno.setImage(forno_ligado);
-            System.out.println("O forno esta ligado = " + this.cozinha.estadoForno());
         }else{
             this.cozinha.ligarForno();
             TimeUnit.SECONDS.sleep(1);
             String x = this.getClass().getResource("/resources/forno_ligado_massa_meio.png").toExternalForm();
             Image forno_ligado = new Image(x);
             this.forno.setImage(forno_ligado);
-            System.out.println("O forno esta ligado = " + this.cozinha.estadoForno());
             TimeUnit.SECONDS.sleep(1);
             x = this.getClass().getResource("/resources/forno_ligado_massa_cheia.png").toExternalForm();
             forno_ligado = new Image(x);
             this.forno.setImage(forno_ligado);
-            System.out.println("O forno esta ligado = " + this.cozinha.estadoForno());
             alreadyBaked = true;
         }
 
@@ -160,13 +168,20 @@ public class FXMLkitchenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        Kitchen.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {                        
+            Platform.setImplicitExit(true);
+            Kitchen.getStage().close();
+            System.exit(0);
+            }
+        });
         this.cozinha = new CozinhaBuilder().getCozinha();
-        System.out.println("Receita Gerada:\n");
-        System.out.println(this.cozinha.getReceita());
+        this.cozinha.novaReceita();
         this.ingrediente_principal.setText(this.cozinha.getReceita().getSabor().toUpperCase());
         this.cobertura_label.setText(this.cozinha.getReceita().getCobertura().getSabor());
         this.complemento_label.setText(this.cozinha.getReceita().getComplemento().getNome());
-
+        this.setTimer();
     }
 
     public boolean hasMainIngredient() {
@@ -368,16 +383,28 @@ public class FXMLkitchenController implements Initializable {
     }
 
     @FXML
-    private void interactForno(MouseEvent event) {
+    private void interactForno(MouseEvent event) throws InterruptedException {
         if ("forma".equals(this.selectedItem)) {
+            if(this.cozinha.estadoForno()){
+                String x = this.getClass().getResource("/resources/forno_ligado_massa_meio.png").toExternalForm();
+                Image forno_ligado = new Image(x);
+                this.forno.setImage(forno_ligado);
+                TimeUnit.SECONDS.sleep(1);
+                x = this.getClass().getResource("/resources/forno_ligado_massa_cheia.png").toExternalForm();
+                forno_ligado = new Image(x);
+                this.forno.setImage(forno_ligado);
+                alreadyBaked = true;
+            }
             this.cozinha.colocarFormaForno();
             this.forma_massa.setVisible(false);
             this.forma_massa.setDisable(true);
             this.selectedItem = null;
         } else if (this.selectedItem == null
                 && this.cozinha.getForno().has_forma()
-                && this.cozinha.estadoForno() == false
                 && this.cozinha.getBolo().getCozido() == true) {
+            String x = this.getClass().getResource("/resources/fonroligado.png").toExternalForm();
+            Image forno_ligado = new Image(x);
+            this.forno.setImage(forno_ligado);
             this.cozinha.retirarFormaForno();
             this.showCake();
         }
@@ -622,6 +649,8 @@ public class FXMLkitchenController implements Initializable {
         this.confirm_cobertura.setVisible(false);
         this.confirm_cobertura.setDisable(true);
         this.selectedItem = null;
+        timer.cancel();
+        interval = 59;
         cakeIsCompatible();
 
     }
@@ -783,8 +812,7 @@ public class FXMLkitchenController implements Initializable {
         int cont = 0;
         Bolo receita = this.cozinha.getReceita();
         Bolo feito = this.cozinha.getBolo();
-        System.out.println(feito);
-        System.out.println(receita);
+      
         if (feito.getSabor() == null ? receita.getSabor() == null : feito.getSabor().equals(receita.getSabor())) {
             cont++;
         }
@@ -805,5 +833,33 @@ public class FXMLkitchenController implements Initializable {
         Fail fail = new Fail();
         fail.start(new Stage());
     }
+    
+    public void setTimer() {
+    timer = new Timer();
+    timer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+            if(interval > 0)
+            {
+                
+                System.out.println(interval);
+                interval--;
+            }
+            else
+                Platform.runLater(() -> {
+                    timer.cancel();
+                try {
+                    failGameOver();
+                } catch (Exception ex) {
+                    Logger.getLogger(FXMLkitchenController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                timer.cancel();
+                interval = 59;
+                
+            });
+        }
+    }, 1000,1000);
+    
+}
     
 }

@@ -5,6 +5,7 @@
  */
 package cozinha;
 
+import static cozinha.Menu.isMuted;
 import static cozinha.Menu.media;
 import static cozinha.Menu.player;
 import javafx.application.Application;
@@ -34,11 +35,17 @@ public class Fail extends Application{
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
         });
-        player.play();
+        if(!isMuted.get()){
+            player.play();
+        }
         failStage.centerOnScreen(); 
         failStage.setResizable(false);
         failStage.setScene(scene);
         failStage.show();
+    }
+    
+    public static Stage getStage(){
+        return failStage;
     }
     
 }

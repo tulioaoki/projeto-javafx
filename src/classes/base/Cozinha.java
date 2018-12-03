@@ -2,6 +2,7 @@ package classes.base;
 
 import builders.CoberturaBuilder;
 import builders.ComplementoBuilder;
+import builders.GeradorReceita;
 import builders.IngredientBuilder;
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class Cozinha extends Item {
     private final CoberturaBuilder coberturaBuilder;
     private final ComplementoBuilder complementoBuilder;
     private final IngredientBuilder ingredientBuilder;
-    
+    private GeradorReceita geradorReceita;
     
     public Cozinha(Bolo receita, Forno forno, Bowl bowl, Espatula espatula, Forma forma){
         this.receita = receita;
@@ -32,6 +33,8 @@ public class Cozinha extends Item {
         this.complementoBuilder = new ComplementoBuilder();
         this.ingredientBuilder = new IngredientBuilder();
         this.bolo = new Bolo();
+        geradorReceita = new GeradorReceita();
+
     }
     
     public boolean has_forma(){
@@ -229,6 +232,10 @@ public class Cozinha extends Item {
     
     public String getComplemento(){
         return this.bolo.getComplemento().getNome();
+    }
+
+    public void novaReceita() {
+        this.receita = geradorReceita.gerarReceita();
     }
             
 }
