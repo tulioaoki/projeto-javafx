@@ -15,15 +15,7 @@ public class Espatula extends Item {
         this.sabor = sabor;
     }
 
-    private Bolo setRecheioBolo(Bolo b) {
-        if(this.recheio != null){
-            b.setRecheio(this.recheio);
-            return b;
-        }else{
-            System.err.println("Espátula sem recheio");
-            return b;
-        }
-    }
+
 
     private Bolo setCoberturaBolo(Bolo b) {
         if(this.cobertura != null){

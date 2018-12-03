@@ -10,7 +10,6 @@ public class Bolo extends Item {
 
     private Cobertura cobertura;
     private Complemento complemento;
-    private Recheio recheio;
     
     private boolean misturado;
 
@@ -59,13 +58,6 @@ public class Bolo extends Item {
         this.cobertura = c;
     }
 
-    public Recheio getRecheio() {
-        return this.recheio;
-    }
-
-    public void setRecheio(Recheio r) {
-        this.recheio = r;
-    }
 
     public void setComplemento(Complemento c) {
         this.complemento = c;
@@ -123,7 +115,7 @@ public class Bolo extends Item {
 
     @Override
     public String toString() {
-        return "Bolo{" + "sabor=" + sabor + ", cozido=" + cozido + ", queimado=" + queimado + ", cobertura=" + cobertura + ", complemento=" + complemento + ", recheio=" + recheio + ", ingredientes=" + ingredientes + '}';
+        return "Bolo{" + "sabor=" + sabor + ", cozido=" + cozido + ", queimado=" + queimado + ", cobertura=" + cobertura + ", complemento=" + complemento + ", ingredientes=" + ingredientes + '}';
     }
 
     public int getQtdIngredients() {

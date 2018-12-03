@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -9,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="683.0" prefWidth="1144.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cozinha.FXMLkitchenController">
    <children>
-      <ImageView fx:id="fundo" fitHeight="839.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="fundo" fitHeight="839.0" fitWidth="1145.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/inicial_scene.jpg" />
          </image>
@@ -21,12 +22,11 @@
             <Image url="@../resources/bowl_vazio.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="forno" fitHeight="279.0" fitWidth="341.0" layoutX="561.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="forno" fitHeight="279.0" fitWidth="341.0" layoutX="561.0" layoutY="158.0" onMouseClicked="#interactForno" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/microwave-vector-3.png" />
          </image>
       </ImageView>
-      <Button layoutX="798.0" layoutY="314.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="19.0" prefWidth="29.0" text="ligar" />
       <ImageView fx:id="laranja" fitHeight="82.0" fitWidth="72.0" layoutX="274.0" layoutY="479.0" onMouseClicked="#selectLaranja" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/LARANJA.png" />
@@ -45,11 +45,6 @@
       <ImageView fx:id="manteiga" fitHeight="65.0" fitWidth="109.0" layoutX="399.0" layoutY="571.0" onMouseClicked="#selectManteiga" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/MANTEIGA.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="chantily" fitHeight="88.0" fitWidth="72.0" layoutX="36.0" layoutY="296.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../resources/CHANTILY.png" />
          </image>
       </ImageView>
       <ImageView fx:id="chocolate" fitHeight="127.0" fitWidth="114.0" layoutX="450.0" layoutY="411.0" onMouseClicked="#selectChocolate" onMouseDragged="#selectChocolate" pickOnBounds="true" preserveRatio="true">
@@ -77,7 +72,7 @@
             <Image url="@../resources/acucar.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="forma_massa" fitHeight="154.0" fitWidth="227.0" layoutX="727.0" layoutY="455.0" onMouseClicked="#selectForma" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="forma_massa" disable="true" fitHeight="154.0" fitWidth="227.0" layoutX="727.0" layoutY="455.0" onMouseClicked="#selectForma" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../resources/forma_com_massa.png" />
          </image>
@@ -102,5 +97,106 @@
             <Font size="31.0" />
          </font>
       </Button>
+      <ImageView fx:id="table_coberturas" disable="true" fitHeight="464.0" fitWidth="684.0" layoutX="184.0" layoutY="288.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../resources/board/board_coberturas.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="table_complementos" disable="true" fitHeight="464.0" fitWidth="684.0" layoutX="184.0" layoutY="310.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../resources/board/board_complementos.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="cobertura_morango" disable="true" layoutX="254.0" layoutY="421.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_morango" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_morango" visible="false" />
+      <Button fx:id="cobertura_laranja" disable="true" layoutX="346.0" layoutY="421.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_laranja" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="Button" visible="false" />
+      <Button fx:id="cobertura_chocolate" disable="true" layoutX="438.0" layoutY="421.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_chocolate" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_chocolate" visible="false" />
+      <Button fx:id="cobertura_limao" disable="true" layoutX="534.0" layoutY="421.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_limao" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_limao" visible="false" />
+      <Button fx:id="cobertura_glace" disable="true" layoutX="260.0" layoutY="521.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_glace" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_glace" visible="false" />
+      <Button fx:id="cobertura_chantilly" disable="true" layoutX="353.0" layoutY="521.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_chantily" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_chantilly" visible="false" />
+      <Button fx:id="cobertura_creme" disable="true" layoutX="449.0" layoutY="517.0" mnemonicParsing="false" onMouseClicked="#select_cobertura_creme" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="cobertura_creme" visible="false" />
+      <Button fx:id="confirm_cobertura" disable="true" layoutX="544.0" layoutY="580.0" mnemonicParsing="false" onMouseClicked="#confirm_cobertura" opacity="0.0" prefHeight="88.0" prefWidth="78.0" text="select_cobertura" visible="false" />
+      <Button fx:id="complemento_morango" disable="true" layoutX="254.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#select_complemento_morango" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="complemento_morango" visible="false" />
+      <Button fx:id="complemento_cereja" disable="true" layoutX="353.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#select_complemento_cereja" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="complemento_cereja" visible="false" />
+      <Button fx:id="complemento_granulado" disable="true" layoutX="438.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#select_complemento_granulado" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="Button" visible="false" />
+      <Button fx:id="select_complemento" disable="true" layoutX="486.0" layoutY="573.0" mnemonicParsing="false" onMouseClicked="#confirm_complemento" opacity="0.0" prefHeight="82.0" prefWidth="96.0" text="Button" visible="false" />
+      <Button fx:id="complemento_laranja" disable="true" layoutX="254.0" layoutY="550.0" mnemonicParsing="false" onMouseClicked="#select_complemento_laranja" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="Button" visible="false" />
+      <Button fx:id="complemento_marsh" disable="true" focusTraversable="false" layoutX="353.0" layoutY="547.0" mnemonicParsing="false" onMouseClicked="#select_complemento_marsh" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="Button" />
+      <Button fx:id="complemento_limao" disable="true" focusTraversable="false" layoutX="544.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#select_complemento_limao" opacity="0.0" prefHeight="82.0" prefWidth="78.0" text="Button" />
+      <ImageView fx:id="bolo" disable="true" fitHeight="168.0" fitWidth="236.0" layoutX="727.0" layoutY="435.0" onMouseClicked="#interactBolo" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../resources/bolos/cobertura_laranja.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="chantilly_flutuante" fitHeight="142.0" fitWidth="227.0" layoutX="721.0" layoutY="404.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../resources/bolos/cobertura_chantily.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="complemento" disable="true" fitHeight="202.0" fitWidth="223.0" layoutX="717.0" layoutY="431.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../resources/bolos/complemento_limao_top.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="354.0" fitWidth="357.0" layoutX="820.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../resources/note.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="872.0" layoutY="349.0" prefHeight="63.0" prefWidth="193.0" text="Ovos">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label layoutX="881.0" layoutY="323.0" prefHeight="63.0" prefWidth="193.0" text="Farinha">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label layoutX="939.0" layoutY="373.0" prefHeight="63.0" prefWidth="193.0" text="Leite">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label layoutX="1015.0" layoutY="381.0" prefHeight="63.0" prefWidth="193.0" text="Açúcar">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label layoutX="988.0" layoutY="354.0" prefHeight="53.0" prefWidth="154.0" text="Manteiga">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="968.0" layoutY="313.0" prefHeight="53.0" prefWidth="154.0" text="Fermento">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label fx:id="ingrediente_principal" layoutX="911.0" layoutY="148.0" prefHeight="53.0" prefWidth="234.0" text="Principal">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Label layoutX="891.0" layoutY="186.0" prefHeight="53.0" prefWidth="154.0" text="Cobertura:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="cobertura_label" layoutX="968.0" layoutY="213.0" prefHeight="53.0" prefWidth="154.0" text="COBERTURA">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="881.0" layoutY="233.0" prefHeight="53.0" prefWidth="227.0" text="Complemento:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="complemento_label" layoutX="958.0" layoutY="262.0" prefHeight="53.0" prefWidth="154.0" text="Cobertura:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button layoutX="798.0" layoutY="293.0" mnemonicParsing="false" onAction="#powerForno" opacity="0.0" prefHeight="47.0" prefWidth="35.0" text="ligar" />
    </children>
 </Pane>

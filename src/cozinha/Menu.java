@@ -29,11 +29,10 @@ public class Menu extends Application {
         novo_stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         Scene scene = new Scene(root);
-        media = new Media(this.getClass().getResource("/resources/raposa.mp3").toExternalForm());
+        media = new Media(this.getClass().getResource("/resources/mc.mp3").toExternalForm());
         player = new MediaPlayer(media);
         player.setOnEndOfMedia(() -> {
             player.seek(Duration.ZERO);
-            System.out.println("Loop!");
         });
         player.play();
         stage.centerOnScreen();

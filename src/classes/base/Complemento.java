@@ -15,10 +15,9 @@ public class Complemento extends Item {
         opcoes.add("morango");
         opcoes.add("laranja");
         opcoes.add("granulado");
-        opcoes.add("raspas-limao");
-        opcoes.add("coco");
+        opcoes.add("limao");
+        opcoes.add("cereja");
         opcoes.add("marsh");
-        opcoes.add("crocante");
     }
     
     public Complemento(String nome){
@@ -26,21 +25,21 @@ public class Complemento extends Item {
         opcoes.add("morango");
         opcoes.add("laranja");
         opcoes.add("granulado");
-        opcoes.add("raspas-limao");
-        opcoes.add("coco");
+        opcoes.add("limao");
+        opcoes.add("cereja");
         opcoes.add("marsh");
-        opcoes.add("crocante");
         if(opcoes.contains(nome)) this.nome = nome;
         else{
+            System.out.println("COMPLEMENTO INVALIDO AQUI");
             System.err.println("Complemento invalido");
         }
     }
     
-    private String getNome() {
+    public String getNome() {
         return this.nome;
     }
 
-    private void setNome(String nome) {
+    public void setNome(String nome) {
         if(opcoes.contains(nome)) this.nome = nome;
         else{
             System.err.println("Complemento invalido");

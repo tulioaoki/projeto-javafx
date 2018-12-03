@@ -9,9 +9,13 @@ public class Cobertura extends Item {
 
     public Cobertura(String sabor) {
         opcoes = new ArrayList();
-        opcoes.add("chantily");
-        opcoes.add("ganache");
+        opcoes.add("limao");
+        opcoes.add("laranja");
+        opcoes.add("chocolate");
+        opcoes.add("chantilly");
+        opcoes.add("creme");
         opcoes.add("glace");
+        opcoes.add("morango");
         if (opcoes.contains(sabor)) {
             this.sabor = sabor;
         } else {
@@ -21,12 +25,16 @@ public class Cobertura extends Item {
 
     public Cobertura() {
         opcoes = new ArrayList();
-        opcoes.add("chantily");
-        opcoes.add("ganache");
+        opcoes.add("limao");
+        opcoes.add("laranja");
+        opcoes.add("chocolate");
+        opcoes.add("chantilly");
+        opcoes.add("creme");
         opcoes.add("glace");
+        opcoes.add("morango");
     }
 
-    private String getSabor() {
+    public String getSabor() {
         return this.sabor;
     }
 

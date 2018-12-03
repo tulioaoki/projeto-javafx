@@ -3,7 +3,6 @@ package classes.base;
 import builders.CoberturaBuilder;
 import builders.ComplementoBuilder;
 import builders.IngredientBuilder;
-import builders.RecheioBuilder;
 import java.util.ArrayList;
 
 /**
@@ -12,8 +11,6 @@ import java.util.ArrayList;
  */
 
 public class Cozinha extends Item {
-    
-    
     private Bolo receita;
     private Forno forno;
     private Bowl bowl;
@@ -23,7 +20,6 @@ public class Cozinha extends Item {
     private final CoberturaBuilder coberturaBuilder;
     private final ComplementoBuilder complementoBuilder;
     private final IngredientBuilder ingredientBuilder;
-    private final RecheioBuilder recheioBuilder;
     
     
     public Cozinha(Bolo receita, Forno forno, Bowl bowl, Espatula espatula, Forma forma){
@@ -35,8 +31,23 @@ public class Cozinha extends Item {
         this.coberturaBuilder = new CoberturaBuilder();
         this.complementoBuilder = new ComplementoBuilder();
         this.ingredientBuilder = new IngredientBuilder();
-        this.recheioBuilder = new RecheioBuilder();
         this.bolo = new Bolo();
+    }
+    
+    public boolean has_forma(){
+        return this.forma != null;
+    }
+    
+    public void colocarFormaForno() {
+        this.forno.colocarForma(this.forma);
+    }
+
+    public void retirarFormaForno() {
+        this.forno.retirarForma();
+    }
+    
+    public Bolo getReceita(){
+        return this.receita;
     }
     
     public void addCobertura(Espatula e){
@@ -45,6 +56,7 @@ public class Cozinha extends Item {
     
     public void ligarForno(){
         this.forno.setLigado(true);
+        assarBolo();
     }
     public void desligarForno(){
         this.forno.setLigado(false);
@@ -86,9 +98,6 @@ public class Cozinha extends Item {
         this.espatula.setSabor(sabor);
     }
 
-    public Bolo getReceita() {
-        return receita;
-    }
 
     public void setReceita(Bolo receita) {
         this.receita = receita;
@@ -100,6 +109,14 @@ public class Cozinha extends Item {
 
     public void setForno(Forno forno) {
         this.forno = forno;
+    }
+    
+    public void setCobertura(String sabor){
+        this.bolo.setCobertura(this.coberturaBuilder.getCobertura(sabor));
+    }
+    
+    public String getCobertura(String sabor){
+        return this.bolo.getCobertura().getSabor();
     }
 
     public Bowl getBowl() {
@@ -204,6 +221,14 @@ public class Cozinha extends Item {
     
     public void esvaziarIngredientes(){
         this.bowl.esvaziar();
+    }
+
+    public void setComplemento(String sabor) {
+        this.bolo.setComplemento(this.complementoBuilder.getComplemento(sabor));
+    }
+    
+    public String getComplemento(){
+        return this.bolo.getComplemento().getNome();
     }
             
 }

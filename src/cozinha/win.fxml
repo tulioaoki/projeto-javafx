@@ -4,9 +4,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="896.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="896.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cozinha.WinController">
    <children>
-      <ImageView fitHeight="713.0" fitWidth="993.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="winImage" fitHeight="713.0" fitWidth="993.0" onMouseClicked="#restartGame" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resources/source.gif" />
          </image></ImageView>

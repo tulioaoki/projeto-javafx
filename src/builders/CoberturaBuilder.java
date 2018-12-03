@@ -6,6 +6,7 @@
 package builders;
 
 import classes.base.Cobertura;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,28 +14,23 @@ import classes.base.Cobertura;
  */
 public class CoberturaBuilder {
     
-    public void CoberturaBuider(){
-        //empty
+    private ArrayList opcoes;
+    
+    public CoberturaBuilder(){
+        opcoes = new ArrayList();
+        opcoes.add("limao");
+        opcoes.add("laranja");
+        opcoes.add("chocolate");
+        opcoes.add("chantilly");
+        opcoes.add("creme");
+        opcoes.add("glace");
+        opcoes.add("morango");
     }
     
     public Cobertura getCobertura(String nome){
-        Cobertura to_return;
-        switch(nome){
-            case "ganache":
-                to_return = new Cobertura(nome);
-                break;
-            case "chantily":
-                to_return = new Cobertura(nome);
-                break;
-            case "glace":
-                to_return = new Cobertura(nome);
-                break;
-            default:
-                to_return = null;
-                System.err.println("Cobertura inválida.");
-                break;
-        }
-        return to_return;
+        if(opcoes.contains(nome)) return new Cobertura(nome);
+        System.err.println("Cobertura inválida.");
+        return null;
     }
     
     

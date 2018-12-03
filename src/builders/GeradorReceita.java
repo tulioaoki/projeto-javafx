@@ -1,15 +1,10 @@
 package builders;
-import builders.CoberturaBuilder;
-import builders.ComplementoBuilder;
-import builders.IngredientBuilder;
-import builders.RecheioBuilder;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import classes.base.Bolo;
 import classes.base.Cobertura;
 import classes.base.Complemento;
 import classes.base.Ingrediente;
-import classes.base.Recheio;
 
 /**
  *
@@ -22,26 +17,22 @@ public class GeradorReceita {
     CoberturaBuilder cobertura_builder;
     ComplementoBuilder complemento_builder;
     IngredientBuilder ingredient_builder;
-    RecheioBuilder recheio_builder;
     
     public GeradorReceita(){
         random = new SecureRandom();
         pedido = new Bolo(); 
         cobertura_builder = new CoberturaBuilder();
         complemento_builder = new ComplementoBuilder();
-        recheio_builder = new RecheioBuilder();
         ingredient_builder = new IngredientBuilder();
 
     }
     
     public Bolo gerarReceita(){
         Cobertura cobertura = this.gerarCoberturaAleatoria();
-        Recheio recheio = this.gerarRecheioAleatorio();
         Complemento complemento = this.gerarComplementoAleatorio();
         ArrayList ingredientes = this.gerarIngredientesAleatorios();
         pedido.setCobertura(cobertura);
         pedido.setComplemento(complemento);
-        pedido.setRecheio(recheio);
         pedido.setIngredientes(ingredientes);
         pedido.setQueimado(false);
         pedido.setCozido(true);
@@ -51,7 +42,7 @@ public class GeradorReceita {
     public ArrayList gerarIngredientesAleatorios(){
         ArrayList aux = new ArrayList();
         IngredientBuilder builder = new IngredientBuilder();
-        int principal = random.nextInt(5);
+        int principal = random.nextInt(4);
         
         Ingrediente ovos = builder.getIngredient("ovos");
         Ingrediente farinha = builder.getIngredient("farinha");
@@ -75,13 +66,10 @@ public class GeradorReceita {
                 p = builder.getIngredient("morango");
                 break;
             case 2:
-                p = builder.getIngredient("baunilha");
+                p = builder.getIngredient("limao");
                 break;
             case 3:
                 p = builder.getIngredient("laranja");
-                break;
-            case 4:
-                p = builder.getIngredient("limao");
                 break;
             default:
                 p = null;
@@ -95,7 +83,7 @@ public class GeradorReceita {
     
     public Complemento gerarComplementoAleatorio(){
         Complemento complemento;  
-        int complemento_num = random.nextInt(7);
+        int complemento_num = random.nextInt(6);
         
         switch(complemento_num){
             case 0:
@@ -108,16 +96,13 @@ public class GeradorReceita {
                 complemento = complemento_builder.getComplemento("granulado");
                 break;
             case 3:
-                complemento = complemento_builder.getComplemento("raspas-limao");
+                complemento = complemento_builder.getComplemento("limao");
                 break;
             case 4:
-                complemento = complemento_builder.getComplemento("coco");
+                complemento = complemento_builder.getComplemento("cereja");
                 break;
             case 5:
                 complemento = complemento_builder.getComplemento("marsh");
-                break;
-            case 6:
-                complemento = complemento_builder.getComplemento("crocante");
                 break;
             default:
                 complemento = null;
@@ -134,13 +119,25 @@ public class GeradorReceita {
 
         switch(cobertura_num){
             case 0:
-                cobertura = cobertura_builder.getCobertura("ganache");
+                cobertura = cobertura_builder.getCobertura("chocolate");
                 break;
             case 1:
                 cobertura = cobertura_builder.getCobertura("glace");
                 break;
             case 2:
-                cobertura = cobertura_builder.getCobertura("chantily");
+                cobertura = cobertura_builder.getCobertura("chantilly");
+                break;
+            case 3:
+                cobertura = cobertura_builder.getCobertura("morango");
+                break;
+            case 4:
+                cobertura = cobertura_builder.getCobertura("laranja");
+                break;
+            case 5:
+                cobertura = cobertura_builder.getCobertura("limao");
+                break;
+            case 6:
+                cobertura = cobertura_builder.getCobertura("creme");
                 break;
             default:
                 cobertura = null;
@@ -149,34 +146,6 @@ public class GeradorReceita {
         }
         
         return cobertura;
-    }
-    
-    public Recheio gerarRecheioAleatorio(){
-        Recheio recheio;
-        int recheio_num = random.nextInt(5);
-        
-        switch(recheio_num){
-            case 0:
-                recheio = recheio_builder.getRecheio("creme");
-                break;
-            case 1:
-                recheio = recheio_builder.getRecheio("chocolate");
-                break;
-            case 2:
-                recheio = recheio_builder.getRecheio("morango");
-                break;
-            case 3:
-                recheio = recheio_builder.getRecheio("coco");
-                break;
-            case 4:
-                recheio = recheio_builder.getRecheio("leite");
-                break;
-            default:
-                recheio = null;
-                System.err.println("Erro na geracao de recheio aleatorio.");
-                break;
-        }
-        return recheio;
     }
     
 }
